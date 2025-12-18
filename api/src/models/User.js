@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const UserSchema = new mongoose.Schema({
-    username: String,
+    username: { type: String, unique: true, required: true },
     password: String,
+    role: { type: String, enum: ["user", "admin"], default: "user"}
 });
 
 UserSchema.methods.verifyPassword = async function(candidatePassword) {

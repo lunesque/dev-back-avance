@@ -12,6 +12,7 @@ app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 require("./services/mongo");
+require("./services/passport")(app);
 
 app.use("/user", require("./controllers/user"));
 app.use("/note", require("./controllers/note"));
