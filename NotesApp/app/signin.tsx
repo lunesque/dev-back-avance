@@ -4,16 +4,18 @@ import { Stack, useRouter, Link } from 'expo-router';
 import api from "../services/api";
 import useAuthStore from "../store/authStore";
 import Form from "../components/Form";
+import Message from "../components/Message";
 
 export default function SignInScreen() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const router = useRouter();
   const { setUser, setIsLoggedIn, setToken } = useAuthStore();
+  const [message, setMessage] = React.useState('');
 
   const signIn = async () => {
     try {
-      const { ok, token, data } = await api.post(
+      const res = await api.post(
         "/user/signin", 
         {
           username: username,
@@ -21,12 +23,14 @@ export default function SignInScreen() {
         }
       );
 
-      console.log(username, password);
-      if (ok) {
-        setUser(data);
+      if (res.ok) {
+        setUser(res.data);
         setIsLoggedIn(true);
-        setToken(token);
-      } else return console.log("Unable to sign in");
+        setToken(res.token);
+      } else {
+        res.message ? setMessage(res.message) : setMessage("Invalid username or password");
+        return console.log(res);
+      }
 
       router.navigate("/(app)");
     } catch(error) {
@@ -34,7 +38,6 @@ export default function SignInScreen() {
     }
   }
     
-
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -43,6 +46,7 @@ export default function SignInScreen() {
         }}
       />  
       <Text style={styles.title}>Sign In</Text>
+      {message ? (<Message message={message} />) : null}
       <Form password={password} setPassword={setPassword} username={username} setUsername={setUsername}  />
       <TouchableOpacity onPress={signIn} style={styles.button}><Text style={styles.buttonLabel}>Sign In</Text></TouchableOpacity>
       <Link style={styles.link}

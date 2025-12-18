@@ -3,22 +3,27 @@ import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from 'rea
 import { Stack, useRouter, Link } from 'expo-router';
 import api from "../services/api";
 import Form from "../components/Form";
+import Message from "../components/Message";
 
 export default function SignUpScreen() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const router = useRouter();
+  const [message, setMessage] = React.useState('');
 
   const signUp = async () => {
     try {
-      const { ok, data } = await api.post(
+      const res = await api.post(
         "/user", 
         {
           username: username,
           password: password
         }
       );
-      if (!ok) return console.log("Unable to sign up");
+      if (!res.ok) {
+        res.message ? setMessage(res.message) : setMessage("Username is taken");
+        return console.log(res);
+      }
 
       router.navigate("/signin");
     } catch(error) {
@@ -34,6 +39,7 @@ export default function SignUpScreen() {
         }}
       />  
       <Text style={styles.title}>Create an account</Text>
+      {message !='' ? (<Message message={message} />) : null}
       <Form password={password} setPassword={setPassword} username={username} setUsername={setUsername}  />
       <TouchableOpacity onPress={signUp} style={styles.button}><Text style={styles.buttonLabel}>Sign Up</Text></TouchableOpacity>
       <Link style={styles.link}
