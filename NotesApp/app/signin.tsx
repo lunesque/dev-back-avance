@@ -1,45 +1,54 @@
 import React from 'react';
 import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
-import { Stack, Link } from 'expo-router';
+import { Stack, useRouter, Link } from 'expo-router';
+import api from "../services/api";
+import useAuthStore from "../store/authStore";
+import Form from "../components/Form";
 
 export default function SignInScreen() {
-  const [username, onChangeUsername] = React.useState('');
-  const [password, onChangePassword] = React.useState('');
-  const [hidePass, setHidePass] = useState(true);
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const router = useRouter();
+  const { setUser, setIsLoggedIn, setToken } = useAuthStore();
+
+  const signIn = async () => {
+    try {
+      const { ok, token, data } = await api.post(
+        "/user/signin", 
+        {
+          username: username,
+          password: password
+        }
+      );
+
+      console.log(username, password);
+      if (ok) {
+        setUser(data);
+        setIsLoggedIn(true);
+        setToken(token);
+      } else return console.log("Unable to sign in");
+
+      router.navigate("/(app)");
+    } catch(error) {
+      console.log(error);
+    }
+  }
+    
 
   return (
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: 'Sign In'}}
+          headerShown: false
+        }}
       />  
-      <Text>Username</Text>
-      <TextInput
-          style={styles.inputContainer}
-          onChangeText={onChangeUsername}
-          value={username}
-          placeholder="username"
-        />
-
-      <Text>Password</Text>
-      <View style={styles.inputContainer}>
-        <TextInput
-            onChangeText={onChangePassword}
-            value={password}
-            placeholder="password"
-            secureTextEntry={hidePass}
-          />
-          <TouchableOpacity  
-            style={{
-              alignSelf: "flex-end"
-            }}
-            onPress={() => setHidePass(!hidePass)}
-          >
-            <Text>{hidePass ? "Show" : "Hide"}</Text>
-          </TouchableOpacity>
-      </View>
-      <Button title="Sign In" onPress={()=> console.log("pushed")}></Button>
+      <Text style={styles.title}>Sign In</Text>
+      <Form password={password} setPassword={setPassword} username={username} setUsername={setUsername}  />
+      <TouchableOpacity onPress={signIn} style={styles.button}><Text style={styles.buttonLabel}>Sign In</Text></TouchableOpacity>
+      <Link style={styles.link}
+      href={{
+        pathname:"/signup"
+      }}>Don't have an account ? Sign up now</Link>
     </View>
   );
 }
@@ -50,11 +59,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: 20
   },
-  inputContainer: {
-    marginBottom: 12,
-    borderWidth: 1,
-    padding: 12,
-    justifyContent: "space-between",
-    flexDirection: "row"
+  title: {
+    fontSize: 32,
+    flex: 0.3,
+    justifyContent: "center",
+    alignSelf: "center",
+    margin: 20
   },
+  button: {
+    alignSelf: 'center',
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    backgroundColor: "pink",
+    borderRadius: 40
+  },
+  buttonLabel: {
+    fontSize: 16,
+    fontWeight: "bold", 
+  },
+  link: {
+    textDecorationLine: "underline",
+    alignSelf: "center",
+    marginTop: 12
+  }
 });
