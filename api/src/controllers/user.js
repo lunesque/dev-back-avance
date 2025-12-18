@@ -24,7 +24,7 @@ const hashPassword = async (pass) => {
 // Authentification (sign in)
 router.post("/signin", async (req, res) => {
     try {
-        const { username, password, role } = req.body;
+        const { username, password } = req.body;
 
         if (!username || !password)
         return res.status(400).send({
@@ -50,7 +50,7 @@ router.post("/signin", async (req, res) => {
             message: "Invalid username or password",
         });
 
-        const token = jwt.sign({ _id: user.id, role: role }, config.SECRET, {expiresIn: JWT_MAX_AGE});
+        const token = jwt.sign({ _id: user.id, role: user.role }, config.SECRET, {expiresIn: JWT_MAX_AGE});
         return res.status(200).send({ ok: true, token: token, data: user });
   } catch (error) {
     console.log(error);
@@ -120,15 +120,12 @@ router.get("/:id",
 
 // All users
 router.get("",
-    passport.authenticate(["user", "admin"], {
+    passport.authenticate(["admin"], {
         session: false,
         failWithError: true,
     }),
     async (req, res) => {
         try {
-            if (req.user.role !== "admin")
-            return res.status(403).send({ ok: false, code: "FORBIDDEN" });
-
             const allUsers = await UserObject.find();
             if (!allUsers) {
                 res.status(404).send({ ok: false, message: "No users found" });

@@ -26,7 +26,7 @@ router.get("/:id",
 
 // All notes
 router.get("",
-    passport.authenticate(["user", "admin"], {
+    passport.authenticate(["admin"], {
         session: false,
         failWithError: true,
     }),
@@ -58,7 +58,7 @@ router.get("/user/:user_id",
             if (req.user._id.toString() !== req.params.user_id && req.user.role !== "admin")
             return res.status(403).send({ ok: false, code: "FORBIDDEN" });
 
-            const allNotes = await NoteObject.find({ user_id: req.params.user_id });
+            const allNotes = await NoteObject.find({ user_id: req.params.user_id }).sort({lastEdited: -1});
             if (!allNotes) {
                 res.status(404).send({ ok: false, message: "No notes found" });
             }
