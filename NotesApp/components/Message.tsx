@@ -1,5 +1,12 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from 'react-native';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Button,
+  TouchableOpacity,
+} from "react-native";
 
 export default function Message({ message }) {
   return (
@@ -14,13 +21,13 @@ const styles = StyleSheet.create({
     backgroundColor: "tomato",
     borderWidth: 1,
     marginVertical: 16,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 12,
   },
   message: {
     padding: 12,
-    color: "white"
+    color: "white",
   },
 });

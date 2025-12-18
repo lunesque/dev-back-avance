@@ -1,10 +1,10 @@
-require('dotenv').config();
-const express = require('express');
+require("dotenv").config();
+const express = require("express");
 const app = express();
 const port = 3000;
-const cors = require('cors');
-const morgan = require('morgan');
-const bodyParser = require('body-parser');
+const cors = require("cors");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
 
 app.use(morgan("tiny"));
 app.use(cors({ credentials: true, origin: "*" }));
@@ -16,7 +16,6 @@ require("./services/passport")(app);
 
 app.use("/user", require("./controllers/user"));
 app.use("/note", require("./controllers/note"));
-
 
 app.get("/", (req, res) => {
   res.send("API - Last deploy: " + new Date().toISOString());

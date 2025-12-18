@@ -1,51 +1,66 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from 'react-native';
-import { Stack, useRouter, Link } from 'expo-router';
+import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Button,
+  TouchableOpacity,
+} from "react-native";
+import { Stack, useRouter, Link } from "expo-router";
 import api from "../services/api";
 import Form from "../components/Form";
 import Message from "../components/Message";
 
 export default function SignUpScreen() {
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
   const router = useRouter();
-  const [message, setMessage] = React.useState('');
+  const [message, setMessage] = React.useState("");
 
   const signUp = async () => {
     try {
-      const res = await api.post(
-        "/user", 
-        {
-          username: username,
-          password: password
-        }
-      );
+      const res = await api.post("/user", {
+        username: username,
+        password: password,
+      });
       if (!res.ok) {
         res.message ? setMessage(res.message) : setMessage("Username is taken");
         return console.log(res);
       }
 
       router.navigate("/signin");
-    } catch(error) {
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          headerShown: false
+          headerShown: false,
         }}
-      />  
+      />
       <Text style={styles.title}>Create an account</Text>
-      {message !='' ? (<Message message={message} />) : null}
-      <Form password={password} setPassword={setPassword} username={username} setUsername={setUsername}  />
-      <TouchableOpacity onPress={signUp} style={styles.button}><Text style={styles.buttonLabel}>Sign Up</Text></TouchableOpacity>
-      <Link style={styles.link}
+      {message != "" ? <Message message={message} /> : null}
+      <Form
+        password={password}
+        setPassword={setPassword}
+        username={username}
+        setUsername={setUsername}
+      />
+      <TouchableOpacity onPress={signUp} style={styles.button}>
+        <Text style={styles.buttonLabel}>Sign Up</Text>
+      </TouchableOpacity>
+      <Link
+        style={styles.link}
         href={{
-        pathname:"/signin"
-      }}>Already have an account ? Sign in</Link>
+          pathname: "/signin",
+        }}
+      >
+        Already have an account ? Sign in
+      </Link>
     </View>
   );
 }
@@ -54,29 +69,29 @@ const styles = StyleSheet.create({
   container: {
     flex: 0.6,
     justifyContent: "center",
-    margin: 20
+    margin: 20,
   },
   title: {
     fontSize: 32,
     flex: 0.3,
     justifyContent: "center",
     alignSelf: "center",
-    margin: 20
+    margin: 20,
   },
   button: {
-    alignSelf: 'center',
+    alignSelf: "center",
     paddingHorizontal: 32,
     paddingVertical: 16,
     backgroundColor: "pink",
-    borderRadius: 40
+    borderRadius: 40,
   },
   buttonLabel: {
     fontSize: 16,
-    fontWeight: "bold", 
+    fontWeight: "bold",
   },
   link: {
     textDecorationLine: "underline",
     alignSelf: "center",
-    marginTop: 12
-  }
+    marginTop: 12,
+  },
 });

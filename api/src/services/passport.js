@@ -25,14 +25,14 @@ module.exports = function (app) {
         console.log("🚀 ~ JwtStrategy ~ error:", error);
       }
       return done(null, false);
-    })
+    }),
   );
 
   passport.use(
     "admin",
     new JwtStrategy(opts, async function (jwtPayload, done) {
       return done(null, { _id: jwtPayload._id, role: "admin" });
-    })
+    }),
   );
 
   app.use(passport.initialize());
