@@ -31,7 +31,7 @@ module.exports = function (app) {
   passport.use(
     "admin",
     new JwtStrategy(opts, async function (jwtPayload, done) {
-      return done(null, { _id: jwtPayload._id, _type: "admin" });
+      return done(null, { _id: jwtPayload._id, role: "admin" });
     })
   );
 
