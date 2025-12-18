@@ -74,7 +74,7 @@ export default function AllNotesScreen() {
         <FlatList
           //Filtrer les notes en fonction de la recherche
           data={notes.filter((note) => {
-            if (note.title && note.body) return (note.title.includes(search) || note.body.includes(search))
+            if (note.title && note.body) return (note.title.toLowerCase().includes(search.toLowerCase()) || note.body.toLowerCase().includes(search.toLowerCase()))
             else if (!search) return note
             else return null
           })}
@@ -85,7 +85,7 @@ export default function AllNotesScreen() {
                   params: { id: item._id, title: item.title, body: item.body }
             }}>
               <View style={styles.item}>
-                  <Text style={styles.title}>{item.title}</Text>
+                  <Text numberOfLines={1} ellipsizeMode="tail" style={styles.title}>{item.title}</Text>
                   <Text numberOfLines={1} ellipsizeMode="tail">{item.body}</Text>
               </View>
             </Link>
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   addIcon: {
     fontSize: 52,

@@ -26,7 +26,7 @@ export default function NoteScreen() {
   }, []);
     
 
-    const updateNote = async (t, b) => {
+    const updateNote = async (t: string, b: string) => {
       try {
         const { ok, status } = await api.put(
           `/note/${id}`,
@@ -62,12 +62,13 @@ return (
     >
       <Stack.Screen
         options={{
+          title: "",
           headerRight: () => (
             <>
-              <TouchableOpacity style={{margin: 12}} onPress={() => {updateNote(titleValue, bodyValue)}}>
+              <TouchableOpacity style={{marginVertical: 8, marginHorizontal: 16, padding: 3}} onPress={() => {updateNote(titleValue, bodyValue)}}>
                 <Text>Save</Text>
               </TouchableOpacity> 
-              <TouchableOpacity style={{margin: 12}} onPress={() => {deleteNote()}}>
+              <TouchableOpacity style={{marginVertical: 8, marginHorizontal: 16, padding: 3}}  onPress={() => {deleteNote()}}>
                 <Text>Delete</Text>
               </TouchableOpacity> 
             </>
@@ -91,6 +92,7 @@ return (
           multiline
           onChangeText={setBodyValue}
           value={bodyValue}
+          style={{flex: 0.6}}
         />
     </View>
   );

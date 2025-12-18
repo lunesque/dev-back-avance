@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
-import { Stack, useRouter, Redirect } from 'expo-router';
+import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { Stack, useRouter } from 'expo-router';
 import api from "../../services/api";
 import useAuthStore from "../../store/authStore";
 
@@ -35,8 +35,6 @@ return (
     <View
         style={{
             flex: 1,
-            // justifyContent: "center",
-            // alignItems: "center",
             margin: 16
         }}
     >
@@ -51,11 +49,11 @@ return (
             )
             }}
         />
-        <Text>Profile</Text>
         <View style={styles.container}>
             <Text>Username : {profile.username}</Text>
     
             <TouchableOpacity><Text>Change password</Text></TouchableOpacity>
+            <TouchableOpacity><Text>Delete account</Text></TouchableOpacity>
         </View>
     </View>
   );
