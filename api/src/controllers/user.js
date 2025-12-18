@@ -34,22 +34,20 @@ router.post("/signin", async (req, res) => {
         });
 
         const user = await UserObject.findOne({ username });
-
-        if (!user)
+        if (!user) {
         return res.status(401).send({
             ok: false,
-            code: "INVALID_USER",
-            message: "Username doesn't exist",
+            code: "INVALID_CREDENTIALS",
+            message: "Invalid username or password",
         });
-
-        const match =
-        // config.ENVIRONMENT === "development" ||
-        (await user.verifyPassword(password, user.password));
+        }
+        
+        const match = await user.verifyPassword(password, user.password);
         if (!match)
         return res.status(401).send({
             ok: false,
-            code: "PASSWORD_INVALID",
-            message: "Password is invalid",
+            code: "INVALID_CREDENTIALS",
+            message: "Invalid username or password",
         });
 
         const token = jwt.sign({ _id: user.id, role: role }, config.SECRET, {expiresIn: JWT_MAX_AGE});
@@ -181,7 +179,7 @@ router.delete("/:id",
             return res.status(403).send({ ok: false, code: "FORBIDDEN" });
 
             const result = await UserObject.deleteOne({ _id: req.params.id });
-            res.status(200).send({ ok: true, message: `${result.deletedCount} user(s) deleted` });
+            res.status(200).send({ ok: true, message: "User deleted" });
 
         } catch (error) {
             console.log(error);
